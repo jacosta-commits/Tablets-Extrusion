@@ -1,0 +1,28 @@
+{
+  "name": "extrusion-monitoring",
+  "version": "1.0.0",
+  "description": "Sistema de monitoreo de extrusoras con integración SQL Server y Modbus/PLC",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js"
+  },
+  "keywords": [
+    "extrusion",
+    "monitoring",
+    "plc",
+    "modbus",
+    "sql-server"
+  ],
+  "author": "FISA",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsmodbus": "^4.0.6",
+    "modbus-serial": "^8.0.23",
+    "mssql": "^10.0.1",
+    "ws": "^8.14.2"
+  }
+}

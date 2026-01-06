@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Monitor de Extrusoras - Sistema de visualización de datos en tiempo real">
+  <meta name="keywords" content="extrusión, monitoreo, producción, control industrial">
+  <meta name="author" content="FISA">
+
+  <title>Monitor de Extrusoras | FISA</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+  <!-- Connection Status -->
+  <div class="status-indicator" id="statusIndicator">
+    <span class="status-dot" id="statusDot"></span>
+    <span id="statusText">Conectando...</span>
+  </div>
+
+  <div class="container">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-main">
+        <h1 class="title" id="extruderTitle">EXTRUSORA - TK1</h1>
+        <button class="selector-btn" id="selectorBtn" aria-label="Cambiar extrusora">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+          </svg>
+        </button>
+        <div class="selector-menu" id="selectorMenu">
+          <button class="menu-option active" data-id="tk1">EXTRUSORA - TK1</button>
+          <button class="menu-option" data-id="tk2">EXTRUSORA - TK2</button>
+          <button class="menu-option" data-id="sima">EXTRUSORA - SIMA</button>
+        </div>
+      </div>
+      <p class="subtitle" id="productName">Nombre del Producto</p>
+    </header>
+
+    <!-- Info Row -->
+    <div class="info-row">
+      <div class="info-field">
+        <span class="field-label">Total:</span>
+        <span class="field-value" id="totalValue">##### kg</span>
+      </div>
+      <div class="info-field">
+        <span class="field-label">Faltante:</span>
+        <span class="field-value" id="faltanteValue">##### kg</span>
+      </div>
+      <div class="info-field">
+        <span class="field-label">OT:</span>
+        <span class="field-value" id="otValue">#####</span>
+      </div>
+    </div>
+
+    <!-- Content Row -->
+    <div class="content-row">
+
+      <!-- Observaciones -->
+      <section class="section">
+        <h2 class="section-title">OBSERVACIONES (VIEW01):</h2>
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Prioridad</th>
+                <th>Observación</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="observacionesTable">
+              <tr>
+                <td colspan="3">Cargando observaciones...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Historial de Estados -->
+        <div class="ultima-parada">
+          <h3 class="subsection-title">Ultima parada (24h):</h3>
+
+          <div class="parada-table-wrapper">
+            <table class="parada-table">
+              <thead>
+                <tr>
+                  <th>Parada</th>
+                  <th>Calentamiento</th>
+                  <th>Produciendo</th>
+                </tr>
+              </thead>
+              <tbody id="historyTable">
+                <tr>
+                  <td colspan="3">Cargando historial...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Resumen de Duraciones -->
+          <div class="duracion-resumen" style="margin-top: 15px; display: flex; gap: 20px; justify-content: flex-end;">
+            <div class="duracion-item">
+              <span class="duracion-label" style="font-weight: bold;">Duración Última Parada:</span>
+              <span class="duracion-value" id="lastStopDuration">-- h -- min</span>
+            </div>
+            <div class="duracion-item">
+              <span class="duracion-label" style="font-weight: bold;">Duración Producción Actual:</span>
+              <span class="duracion-value" id="currentProductionDuration">-- h -- min</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Velocidad/Presion y Ficha Tecnica - Comparativa -->
+      <section class="section section-comparativa">
+        <div class="comparativa-columns">
+          <!-- Columna Izquierda: Velocidad y Presion -->
+          <div class="comparativa-col">
+            <div class="header-row"
+              style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; margin-bottom: 10px; padding-bottom: 5px;">
+              <h2 class="section-title" style="margin:0;">Velocidad</h2>
+            </div>
+            <div class="data-list">
+              <div class="data-row">
+                <span class="data-label">Lineo(%):</span>
+                <span class="data-value" id="lineoValue">###</span>
+              </div>
+            </div>
+
+            <div class="header-row"
+              style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; margin-top: 20px; margin-bottom: 10px; padding-bottom: 5px;">
+              <h2 class="section-title" style="margin:0;">Presion</h2>
+            </div>
+            <div class="data-list">
+              <div class="data-row">
+                <span class="data-label">Seguridad (bar):</span>
+                <span class="data-value" id="seguridadValue">###</span>
+              </div>
+              <div class="data-row">
+                <span class="data-label">Trabajo (bar):</span>
+                <span class="data-value" id="trabajoValue">###</span>
+              </div>
+              <div class="data-row">
+                <span class="data-label">Cabeza (bar):</span>
+                <span class="data-value" id="cabezaValue">###</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Separador Visual -->
+          <div class="comparativa-divider"></div>
+
+          <!-- Columna Derecha: Ficha Tecnica -->
+          <div class="comparativa-col">
+            <div class="header-row" style="border-bottom: 2px solid #eee; margin-bottom: 10px; padding-bottom: 5px;">
+              <h2 class="section-title" style="margin:0;">Ficha Tecnica</h2>
+            </div>
+            <div class="data-list">
+              <div class="data-row">
+                <span class="data-value" id="fichaTecnica1">###</span>
+              </div>
+            </div>
+
+            <div class="header-row"
+              style="border-bottom: 2px solid transparent; margin-top: 20px; margin-bottom: 10px; padding-bottom: 5px;">
+              <h2 class="section-title" style="margin:0; visibility: hidden;">Presion</h2>
+            </div>
+            <div class="data-list">
+              <div class="data-row">
+                <span class="data-value" id="fichaTecnica2">###</span>
+              </div>
+              <div class="data-row">
+                <span class="data-value" id="fichaTecnica3">###</span>
+              </div>
+              <div class="data-row">
+                <span class="data-value" id="fichaTecnica4">###</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Footer Buttons - Configurables -->
+    <footer class="footer-buttons" id="footerButtons">
+      <!-- Los botones se generan dinámicamente desde config.js -->
+    </footer>
+
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/websocket.js"></script>
+  <script src="/js/ui.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+
+</html>

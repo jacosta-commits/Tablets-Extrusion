@@ -1,0 +1,93 @@
+:root {
+  /* ========== Colores Principal ========== */
+  --color-primary: hsl(255, 70%, 60%);
+  --color-primary-light: hsl(255, 70%, 70%);
+  --color-primary-dark: hsl(255, 70%, 50%);
+  
+  --color-secondary: hsl(210, 80%, 55%);
+  --color-secondary-light: hsl(210, 80%, 65%);
+  
+  --color-accent: hsl(285, 70%, 65%);
+  --color-accent-light: hsl(285, 70%, 75%);
+  
+  /* ========== Gradientes ========== */
+  --gradient-primary: linear-gradient(135deg, hsl(255, 70%, 60%), hsl(210, 80%, 55%));
+  --gradient-header: linear-gradient(135deg, #6B73FF 0%, #7A5FFF 50%, #8E54E9 100%);
+  --gradient-button: linear-gradient(135deg, #6B73FF 0%, #7A5FFF 100%);
+  --gradient-button-hover: linear-gradient(135deg, #7A5FFF 0%, #8E54E9 100%);
+  
+  /* ========== Grises y Fondos ========== */
+  --color-bg-primary: hsl(220, 20%, 10%);
+  --color-bg-secondary: hsl(220, 18%, 14%);
+  --color-bg-tertiary: hsl(220, 16%, 18%);
+  --color-bg-card: hsla(220, 18%, 14%, 0.6);
+  
+  /* ========== Texto ========== */
+  --color-text-primary: hsl(0, 0%, 95%);
+  --color-text-secondary: hsl(0, 0%, 75%);
+  --color-text-muted: hsl(0, 0%, 55%);
+  --color-text-accent: var(--color-primary-light);
+  
+  /* ========== Estados y Feedback ========== */
+  --color-success: hsl(140, 70%, 50%);
+  --color-warning: hsl(45, 100%, 55%);
+  --color-error: hsl(0, 70%, 60%);
+  --color-info: hsl(200, 80%, 60%);
+  
+  /* ========== Bordes y Sombras ========== */
+  --color-border: hsla(0, 0%, 100%, 0.1);
+  --color-border-focus: hsla(255, 70%, 60%, 0.5);
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(107, 115, 255, 0.3);
+  
+  /* ========== Glassmorphism ========== */
+  --glass-bg: hsla(220, 18%, 14%, 0.6);
+  --glass-border: hsla(0, 0%, 100%, 0.1);
+  --glass-backdrop: blur(12px);
+  
+  /* ========== Espaciado ========== */
+  --space-xs: 0.25rem;   /* 4px */
+  --space-sm: 0.5rem;    /* 8px */
+  --space-md: 1rem;      /* 16px */
+  --space-lg: 1.5rem;    /* 24px */
+  --space-xl: 2rem;      /* 32px */
+  --space-2xl: 3rem;     /* 48px */
+  --space-3xl: 4rem;     /* 64px */
+  
+  /* ========== Tamaños de Fuente ========== */
+  --font-xs: 0.75rem;    /* 12px */
+  --font-sm: 0.875rem;   /* 14px */
+  --font-base: 1rem;     /* 16px */
+  --font-lg: 1.125rem;   /* 18px */
+  --font-xl: 1.25rem;    /* 20px */
+  --font-2xl: 1.5rem;    /* 24px */
+  --font-3xl: 1.875rem;  /* 30px */
+  --font-4xl: 2.25rem;   /* 36px */
+  
+  /* ========== Peso de Fuente ========== */
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  
+  /* ========== Bordes Redondeados ========== */
+  --radius-sm: 0.375rem;  /* 6px */
+  --radius-md: 0.5rem;    /* 8px */
+  --radius-lg: 0.75rem;   /* 12px */
+  --radius-xl: 1rem;      /* 16px */
+  --radius-full: 9999px;
+  
+  /* ========== Transiciones ========== */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 350ms ease;
+  
+  /* ========== Z-Index ========== */
+  --z-dropdown: 1000;
+  --z-modal: 2000;
+  --z-tooltip: 3000;
+}
