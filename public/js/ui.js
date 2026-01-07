@@ -192,9 +192,9 @@ const UI = (function () {
     function updateDisplay(data) {
         // Nombre del producto (con soporte para saltos de línea)
         if (data.producto) {
-            elements.productName.textContent = data.producto.replace(/\\n/g, '\n');
-            // Permitir line breaks visuales
-            elements.productName.style.whiteSpace = 'pre-line';
+            // Reemplazar saltos de línea con espacios para aprovechar el ancho
+            elements.productName.textContent = data.producto.replace(/\\n/g, ' ');
+            // elements.productName.style.whiteSpace = 'pre-line'; // Removed to allow natural wrapping
         }
 
         // Info row - con formato de 2 decimales
@@ -294,7 +294,7 @@ const UI = (function () {
         const currentProductionDurationEl = document.getElementById('currentProductionDuration');
 
         if (!history || history.length === 0) {
-            elements.historyTable.innerHTML = '<tr><td colspan="3">Sin historial reciente</td></tr>';
+            // elements.historyTable.innerHTML = '<tr><td colspan="3">Sin historial reciente</td></tr>';
             if (lastStopDurationEl) lastStopDurationEl.textContent = '-- h -- min';
             if (currentProductionDurationEl) currentProductionDurationEl.textContent = '-- h -- min';
             return;
