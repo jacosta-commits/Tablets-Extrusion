@@ -350,14 +350,14 @@ const UI = (function () {
         const formatTime = (dateStr) => {
             try {
                 const date = new Date(dateStr);
-                return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                return date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: true });
             } catch (e) { return '--:--'; }
         };
 
         const formatDate = (dateStr) => {
             try {
                 const date = new Date(dateStr);
-                return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+                return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' });
             } catch (e) { return '--/--'; }
         };
 

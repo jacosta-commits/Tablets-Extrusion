@@ -228,7 +228,8 @@ body {
     flex: 1;
     overflow-y: auto;
     min-height: 0;
-    max-height: 300px;
+    max-height: 180px;
+    /* Reduced from 300px */
 }
 
 .table {
@@ -270,8 +271,10 @@ body {
 
 /* ========== Ultima Parada ========== */
 .ultima-parada {
-    margin-top: 16px;
-    padding-top: 16px;
+    margin-top: 8px;
+    /* Reduced from 16px */
+    padding-top: 8px;
+    /* Reduced from 16px */
     border-top: 1px solid #e5e7eb;
 }
 
@@ -290,7 +293,8 @@ body {
 .parada-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 12px;
+    font-size: 16px;
+    /* Increased from 12px */
 }
 
 .parada-table thead {
@@ -301,17 +305,21 @@ body {
 }
 
 .parada-table th {
-    padding: 6px 8px;
+    padding: 8px 10px;
+    /* Increased padding */
     text-align: left;
-    font-size: 12px;
+    font-size: 16px;
+    /* Increased from 12px */
     font-weight: 600;
     color: #374151;
     border-bottom: 1px solid #d1d5db;
 }
 
 .parada-table td {
-    padding: 6px 8px;
-    font-size: 12px;
+    padding: 8px 10px;
+    /* Increased padding */
+    font-size: 16px;
+    /* Increased from 12px */
     color: #374151;
     border-bottom: 1px solid #e5e7eb;
 }

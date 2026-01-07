@@ -10,7 +10,7 @@ const db = require('./config/database');
 const modbusService = require('./services/modbusService');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3081;
 
 // Middleware
 app.use(cors());
