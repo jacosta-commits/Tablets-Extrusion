@@ -90,7 +90,7 @@ body {
     box-shadow: var(--shadow-lg);
     color: white;
     position: relative;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 /* Subtle glow effect in header */
@@ -166,7 +166,7 @@ body {
     visibility: hidden;
     transform: translateY(-8px);
     transition: all 0.2s;
-    z-index: 100;
+    z-index: 1000;
     min-width: 200px;
     overflow: hidden;
 }
