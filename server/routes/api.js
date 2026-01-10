@@ -347,7 +347,7 @@ async function getObservaciones(extruder) {
 
         // Consultar últimas 24 horas
         const query = `
-            SELECT prinom, manobs, mancerfec
+            SELECT prinom, manobs, mancerfec, codusucre
             FROM Medidores_2023.dbo.VIEW_PRD_SCADA011
             WHERE ctcod = @ctcod 
             AND mancerfec >= DATEADD(hour, -24, GETDATE())
@@ -363,7 +363,8 @@ async function getObservaciones(extruder) {
         return result.map(row => ({
             prioridad: row.prinom,
             observacion: row.manobs,
-            fecha: row.mancerfec
+            fecha: row.mancerfec,
+            usuario: row.codusucre
         }));
 
     } catch (error) {

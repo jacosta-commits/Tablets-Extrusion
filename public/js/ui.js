@@ -271,9 +271,10 @@ const UI = (function () {
             }
 
             row.innerHTML = `
+                <td>${fechaStr}</td>
+                <td>${obs.usuario || '-'}</td>
                 <td>${obs.prioridad || '-'}</td>
                 <td>${obs.observacion || '-'}</td>
-                <td>${fechaStr}</td>
             `;
             elements.observacionesTable.appendChild(row);
         });
