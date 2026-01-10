@@ -194,7 +194,6 @@ const UI = (function () {
         if (data.producto) {
             // Reemplazar saltos de línea con espacios para aprovechar el ancho
             elements.productName.textContent = data.producto.replace(/\\n/g, ' ');
-            // elements.productName.style.whiteSpace = 'pre-line'; // Removed to allow natural wrapping
         }
 
         // Info row - con formato de 2 decimales
@@ -281,11 +280,13 @@ const UI = (function () {
     }
 
     /**
-     * Actualiza tabla de historial de estados (Vista Ciclos)
-     * Columnas: Parada | Calentamiento | Produciendo
+     * Actualiza tabla de historial de estados
+     * Columnas: Parada | Calentamiento | Tiempo Calentamiento | Produciendo
      */
     function updateHistory(history) {
         if (!elements.historyTable) return;
+
+        console.log('History received:', history); // Debugging
 
         elements.historyTable.innerHTML = '';
 
@@ -294,59 +295,25 @@ const UI = (function () {
         const currentProductionDurationEl = document.getElementById('currentProductionDuration');
 
         if (!history || history.length === 0) {
-            // elements.historyTable.innerHTML = '<tr><td colspan="3">Sin historial reciente</td></tr>';
             if (lastStopDurationEl) lastStopDurationEl.textContent = '-- h -- min';
             if (currentProductionDurationEl) currentProductionDurationEl.textContent = '-- h -- min';
             return;
         }
 
-        // 1. Agrupar eventos en ciclos
-        const cycles = [];
-        let lastStopDuration = '-- h -- min';
-        let currentProductionDuration = '-- h -- min';
-
-        // Encontrar producción actual
+        // Actualizar widgets (usar primer evento para estado actual)
         if (history[0].estado === 'Produciendo') {
-            currentProductionDuration = history[0].duracion;
-        }
-
-        // Recorrer historial para armar ciclos
-        for (let i = 0; i < history.length; i++) {
-            const event = history[i];
-
-            if (event.estado === 'Parada') {
-                let stopEvent = event;
-                let heatEvent = null;
-                let prodEvent = null;
-
-                if (i > 0) {
-                    const nextEvent = history[i - 1];
-                    if (nextEvent.estado === 'Calentamiento') {
-                        heatEvent = nextEvent;
-                        if (i > 1) {
-                            const nextNextEvent = history[i - 2];
-                            if (nextNextEvent.estado === 'Produciendo') {
-                                prodEvent = nextNextEvent;
-                            }
-                        }
-                    } else if (nextEvent.estado === 'Produciendo') {
-                        prodEvent = nextEvent;
-                    }
-                }
-
-                if (lastStopDuration === '-- h -- min') {
-                    lastStopDuration = stopEvent.duracion;
-                }
-
-                cycles.push({
-                    stop: stopEvent,
-                    heat: heatEvent,
-                    prod: prodEvent
-                });
+            currentProductionDurationEl.textContent = history[0].duracion;
+            // Buscar última parada
+            const lastStop = history.find(e => e.estado.includes('Parada'));
+            if (lastStop && lastStopDurationEl) {
+                lastStopDurationEl.textContent = lastStop.duracion;
             }
+        } else {
+            lastStopDurationEl.textContent = history[0].duracion;
+            currentProductionDurationEl.textContent = '-- h -- min';
         }
 
-        // Renderizar tabla
+        // Formatear fechas/horas
         const formatTime = (dateStr) => {
             try {
                 const date = new Date(dateStr);
@@ -361,29 +328,108 @@ const UI = (function () {
             } catch (e) { return '--/--'; }
         };
 
+        // Agrupar eventos en CICLOS de disrupción
+        // Un ciclo es: Parada/Calentamiento → Producción
+        // Mostrar cada ciclo en una sola fila
+        const cycles = [];
+
+        for (let i = 0; i < history.length; i++) {
+            const event = history[i];
+
+            // Si encontramos producción, buscar hacia atrás eventos de parada/calentamiento
+            if (event.estado === 'Produciendo') {
+                let cycle = {
+                    prod: event,
+                    stop: null,
+                    heat: null
+                };
+
+                // Buscar hacia atrás (eventos más viejos) parada/calentamiento
+                // dentro de una ventana de ~10 minutos antes de la producción
+                const prodStart = new Date(event.inicio);
+                let j = i + 1;
+
+                while (j < history.length) {
+                    const prevEvent = history[j];
+                    const prevEnd = new Date(prevEvent.fin);
+                    const gapMinutes = (prodStart - prevEnd) / 1000 / 60;
+
+                    // Si el evento anterior terminó hace más de 10 minutos, no es parte del ciclo
+                    if (gapMinutes > 10) break;
+
+                    // Agregar al ciclo si es parada o calentamiento
+                    if (prevEvent.estado.includes('Parada')) {
+                        if (!cycle.stop) cycle.stop = prevEvent;
+                    }
+                    if (prevEvent.estado.includes('Calentamiento')) {
+                        if (!cycle.heat) cycle.heat = prevEvent;
+                    }
+
+                    j++;
+
+                    // Si ya encontramos ambos, podemos parar
+                    if (cycle.stop && cycle.heat) break;
+                }
+
+                cycles.push(cycle);
+            }
+            // Si es parada/calentamiento sin producción después (parada en curso)
+            else if (i === 0 && (event.estado.includes('Parada') || event.estado.includes('Calentamiento'))) {
+                let cycle = {
+                    prod: null,
+                    stop: null,
+                    heat: null
+                };
+
+                // Buscar todos los eventos de parada/calentamiento consecutivos
+                let j = 0;
+                while (j < history.length && history[j].estado !== 'Produciendo') {
+                    const e = history[j];
+                    if (e.estado.includes('Parada') && !cycle.stop) {
+                        cycle.stop = e;
+                    }
+                    if (e.estado.includes('Calentamiento') && !cycle.heat) {
+                        cycle.heat = e;
+                    }
+                    j++;
+                }
+
+                cycles.push(cycle);
+            }
+        }
+
+        // Renderizar ciclos
         cycles.forEach(cycle => {
             const row = document.createElement('tr');
 
-            // Parada (Fecha + Hora)
-            const stopTime = `${formatDate(cycle.stop.inicio)} ${formatTime(cycle.stop.inicio)}`;
+            // REGLA IMPORTANTE: Solo mostrar "Parada" si ocurrió ANTES o JUNTO con el Calentamiento
+            // Si la parada ocurrió DESPUÉS del calentamiento, omitirla
+            let stopTime = '-';
+            if (cycle.stop && cycle.heat) {
+                const stopStart = new Date(cycle.stop.inicio);
+                const heatStart = new Date(cycle.heat.inicio);
+                // Solo mostrar si parada <= calentamiento
+                if (stopStart <= heatStart) {
+                    stopTime = `${formatDate(cycle.stop.inicio)} ${formatTime(cycle.stop.inicio)}`;
+                }
+            } else if (cycle.stop && !cycle.heat) {
+                // Si solo hay parada sin calentamiento, mostrarla
+                stopTime = `${formatDate(cycle.stop.inicio)} ${formatTime(cycle.stop.inicio)}`;
+            }
 
-            // Calentamiento (Fecha + Hora)
             const heatTime = cycle.heat ? `${formatDate(cycle.heat.inicio)} ${formatTime(cycle.heat.inicio)}` : '-';
-
-            // Produciendo (Fecha + Hora)
-            const prodTime = cycle.prod ? `${formatDate(cycle.prod.inicio)} ${formatTime(cycle.prod.inicio)}` : '-';
+            const heatDuration = cycle.heat ? cycle.heat.duracion : '-';
+            const prodTime = cycle.prod ? `${formatDate(cycle.prod.inicio)} ${formatTime(cycle.prod.inicio)}` : '<span class="status-badge status-stopped">En curso</span>';
 
             row.innerHTML = `
                 <td>${stopTime}</td>
                 <td>${heatTime}</td>
+                <td>${heatDuration}</td>
                 <td>${prodTime}</td>
             `;
+
             elements.historyTable.appendChild(row);
         });
-
-        // Actualizar widgets
-        if (lastStopDurationEl) lastStopDurationEl.textContent = lastStopDuration;
-        if (currentProductionDurationEl) currentProductionDurationEl.textContent = currentProductionDuration;
     }
 
     /**

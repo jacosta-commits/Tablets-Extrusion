@@ -1,0 +1,209 @@
+Conectando a la base de datos...
+✓ Conectado
+
+Ejecutando query...
+
+Resultados (últimas 20 filas):
+=========================================
+
+Fila 0:
+  Time_Stamp: Sat Jan 10 2026 09:30:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 1:
+  Time_Stamp: Sat Jan 10 2026 09:29:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 2:
+  Time_Stamp: Sat Jan 10 2026 09:28:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 3:
+  Time_Stamp: Sat Jan 10 2026 09:27:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 4:
+  Time_Stamp: Sat Jan 10 2026 09:26:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 5:
+  Time_Stamp: Sat Jan 10 2026 09:25:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 6:
+  Time_Stamp: Sat Jan 10 2026 09:24:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 7:
+  Time_Stamp: Sat Jan 10 2026 09:23:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 8:
+  Time_Stamp: Sat Jan 10 2026 09:22:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 9:
+  Time_Stamp: Sat Jan 10 2026 09:21:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 10:
+  Time_Stamp: Sat Jan 10 2026 09:20:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 11:
+  Time_Stamp: Sat Jan 10 2026 09:19:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 12:
+  Time_Stamp: Sat Jan 10 2026 09:18:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 13:
+  Time_Stamp: Sat Jan 10 2026 09:17:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 14:
+  Time_Stamp: Sat Jan 10 2026 09:16:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 15:
+  Time_Stamp: Sat Jan 10 2026 09:15:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 16:
+  Time_Stamp: Sat Jan 10 2026 09:14:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 17:
+  Time_Stamp: Sat Jan 10 2026 09:13:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 18:
+  Time_Stamp: Sat Jan 10 2026 09:12:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+Fila 19:
+  Time_Stamp: Sat Jan 10 2026 09:11:00 GMT-0500 (hora estándar de Perú)
+  Estado: Produciendo
+  Calentamiento (raw): 0
+  Calentamiento (type): number
+  Calentamiento == 1: false
+  Calentamiento === 1: false
+  Calentamiento === true: false
+  Calentamiento (boolean): false
+
+✓ Conexión cerrada

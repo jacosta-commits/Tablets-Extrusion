@@ -11,7 +11,8 @@ const baseConfig = {
     trustServerCertificate: true,
     enableArithAbort: true,
     connectTimeout: 30000,
-    requestTimeout: 30000
+    requestTimeout: 30000,
+    useUTC: false // Treat DB dates as local time, not UTC
   },
   pool: {
     max: 10,
@@ -74,12 +75,12 @@ async function queryAcabados(queryString, params = {}) {
   try {
     const pool = await getAcabadosPool();
     const request = pool.request();
-    
+
     // Añadir parámetros si existen
     Object.keys(params).forEach(key => {
       request.input(key, params[key]);
     });
-    
+
     const result = await request.query(queryString);
     return result.recordset;
   } catch (err) {
@@ -95,12 +96,12 @@ async function queryMedidores(queryString, params = {}) {
   try {
     const pool = await getMedidoresPool();
     const request = pool.request();
-    
+
     // Añadir parámetros si existen
     Object.keys(params).forEach(key => {
       request.input(key, params[key]);
     });
-    
+
     const result = await request.query(queryString);
     return result.recordset;
   } catch (err) {
