@@ -106,6 +106,8 @@ body {
     backdrop-filter: blur(10px);
     flex-shrink: 0;
     /* Prevent shrinking */
+    z-index: 500;
+    /* Ensure dropdown appears on top */
 }
 
 .title {
@@ -128,7 +130,9 @@ body {
 /* Selector Button */
 .selector-btn {
     position: absolute;
-    right: 16px;
+    left: 16px;
+    /* Moved to left to avoid status indicator overlap */
+    right: auto;
     top: 50%;
     transform: translateY(-50%);
     background: rgba(255, 255, 255, 0.03);
@@ -150,7 +154,9 @@ body {
 .selector-menu {
     position: absolute;
     top: calc(100% + 8px);
-    right: 0;
+    left: 16px;
+    /* Align with button on the left */
+    right: auto;
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
