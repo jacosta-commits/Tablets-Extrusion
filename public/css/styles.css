@@ -386,10 +386,10 @@ body {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    flex-shrink: 0;
-    /* Don't shrink this section */
-    max-height: 40%;
-    /* Limit height */
+    flex: 1;
+    /* Take equal space */
+    min-height: 0;
+    /* Allow scrolling inside */
 }
 
 .subsection-title {
