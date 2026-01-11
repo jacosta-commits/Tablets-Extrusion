@@ -46,16 +46,16 @@
     <!-- Info Row -->
     <div class="info-row">
       <div class="info-field">
+        <span class="field-label">OT:</span>
+        <span class="field-value" id="otValue">#####</span>
+      </div>
+      <div class="info-field">
         <span class="field-label">Total:</span>
         <span class="field-value" id="totalValue">##### kg</span>
       </div>
       <div class="info-field">
         <span class="field-label">Faltante:</span>
         <span class="field-value" id="faltanteValue">##### kg</span>
-      </div>
-      <div class="info-field">
-        <span class="field-label">OT:</span>
-        <span class="field-value" id="otValue">#####</span>
       </div>
     </div>
 
@@ -91,30 +91,17 @@
             <table class="parada-table">
               <thead>
                 <tr>
-                  <th>Parada</th>
-                  <th>Calentamiento</th>
-                  <th>Tiempo Calentamiento</th>
-                  <th>Produciendo</th>
+                  <th id="header-col-1">Inicio Parada</th>
+                  <th id="header-col-2">Inicio Calentamiento</th>
+                  <th id="header-col-3">Tiempo Calentamiento</th>
                 </tr>
               </thead>
               <tbody id="historyTable">
                 <tr>
-                  <td colspan="4">Cargando historial...</td>
+                  <td colspan="3">Cargando historial...</td>
                 </tr>
               </tbody>
             </table>
-          </div>
-
-          <!-- Resumen de Duraciones -->
-          <div class="duracion-resumen" style="margin-top: 15px; display: flex; gap: 20px; justify-content: flex-end;">
-            <div class="duracion-item">
-              <span class="duracion-label" style="font-weight: bold;">Duración Última Parada:</span>
-              <span class="duracion-value" id="lastStopDuration">-- h -- min</span>
-            </div>
-            <div class="duracion-item">
-              <span class="duracion-label" style="font-weight: bold;">Duración Producción Actual:</span>
-              <span class="duracion-value" id="currentProductionDuration">-- h -- min</span>
-            </div>
           </div>
         </div>
       </section>

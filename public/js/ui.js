@@ -5,6 +5,7 @@
 const UI = (function () {
     let currentExtruder = 'tk1';
     let elements = {};
+    let updateInterval = null; // Intervalo para actualizar tiempos en tiempo real
 
     /**
      * Inicializa el módulo
@@ -47,6 +48,17 @@ const UI = (function () {
 
         setupEvents();
         initializeFooterButtons();
+
+        // Cargar extrusora guardada o usar default
+        const savedExtruder = localStorage.getItem('selectedExtruder');
+        if (savedExtruder) {
+            console.log('Restoring saved extruder:', savedExtruder);
+            selectExtruder(savedExtruder);
+        } else {
+            console.log('Using default extruder:', currentExtruder);
+            loadData();
+        }
+
         console.log('✓ UI inicializado');
     }
 
@@ -141,12 +153,14 @@ const UI = (function () {
      * Selecciona una extrusora
      */
     async function selectExtruder(extruderId) {
-        if (currentExtruder === extruderId) {
+        // Permitir re-selección si es para inicialización, pero evitar trabajo extra si ya está activa y cargada
+        if (currentExtruder === extruderId && elements.extruderTitle.textContent.includes(extruderId.toUpperCase()) && elements.historyTable.innerHTML !== '') {
             elements.selectorMenu.classList.remove('active');
             return;
         }
 
         currentExtruder = extruderId;
+        localStorage.setItem('selectedExtruder', extruderId); // Persistir selección
 
         // Actualizar título
         const names = {
@@ -154,7 +168,7 @@ const UI = (function () {
             'tk2': 'EXTRUSORA - TK2',
             'sima': 'EXTRUSORA - SIMA'
         };
-        elements.extruderTitle.textContent = names[extruderId];
+        elements.extruderTitle.textContent = names[extruderId] || `EXTRUSORA - ${extruderId.toUpperCase()}`;
 
         // Actualizar menú activo
         elements.menuOptions.forEach(option => {
@@ -282,36 +296,26 @@ const UI = (function () {
 
     /**
      * Actualiza tabla de historial de estados
-     * Columnas: Parada | Calentamiento | Tiempo Calentamiento | Produciendo
+     * Columnas Dinámicas:
+     * 1. Inicio Parada (Siempre)
+     * 2. Inicio Calentamiento (si activo) O Inicio Producción (si completado)
+     * 3. Tiempo Calentamiento (si activo) O Tiempo Total Parada (si completado)
      */
     function updateHistory(history) {
         if (!elements.historyTable) return;
+
+        // Limpiar intervalo previo si existe
+        if (updateInterval) {
+            clearInterval(updateInterval);
+            updateInterval = null;
+        }
 
         console.log('History received:', history); // Debugging
 
         elements.historyTable.innerHTML = '';
 
-        // Actualizar widgets de resumen
-        const lastStopDurationEl = document.getElementById('lastStopDuration');
-        const currentProductionDurationEl = document.getElementById('currentProductionDuration');
-
         if (!history || history.length === 0) {
-            if (lastStopDurationEl) lastStopDurationEl.textContent = '-- h -- min';
-            if (currentProductionDurationEl) currentProductionDurationEl.textContent = '-- h -- min';
             return;
-        }
-
-        // Actualizar widgets (usar primer evento para estado actual)
-        if (history[0].estado === 'Produciendo') {
-            currentProductionDurationEl.textContent = history[0].duracion;
-            // Buscar última parada
-            const lastStop = history.find(e => e.estado.includes('Parada'));
-            if (lastStop && lastStopDurationEl) {
-                lastStopDurationEl.textContent = lastStop.duracion;
-            }
-        } else {
-            lastStopDurationEl.textContent = history[0].duracion;
-            currentProductionDurationEl.textContent = '-- h -- min';
         }
 
         // Formatear fechas/horas
@@ -331,7 +335,6 @@ const UI = (function () {
 
         // Agrupar eventos en CICLOS de disrupción
         // Un ciclo es: Parada/Calentamiento → Producción
-        // Mostrar cada ciclo en una sola fila
         const cycles = [];
 
         for (let i = 0; i < history.length; i++) {
@@ -399,43 +402,106 @@ const UI = (function () {
             }
         }
 
+        // Actualizar encabezados dinámicamente según el estado del primer ciclo (el más reciente)
+        const headerCol2 = document.getElementById('header-col-2');
+        const headerCol3 = document.getElementById('header-col-3');
+
+        // Determinar estado actual basado en el primer ciclo
+        const isProducing = cycles.length > 0 && cycles[0].prod;
+
+        if (isProducing) {
+            // Si el último ciclo ya está en producción
+            if (headerCol2) headerCol2.textContent = 'Inicio Producción';
+            if (headerCol3) headerCol3.textContent = 'Tiempo Total Parada';
+        } else {
+            // Si el último ciclo está en parada o calentamiento
+            if (headerCol2) headerCol2.textContent = 'Inicio Calentamiento';
+            if (headerCol3) headerCol3.textContent = 'Tiempo Calentamiento';
+        }
+
         // Renderizar ciclos
-        cycles.forEach(cycle => {
+        cycles.forEach((cycle, index) => {
             const row = document.createElement('tr');
 
-            // REGLA IMPORTANTE: Solo mostrar "Parada" si ocurrió ANTES o JUNTO con el Calentamiento
-            // Si la parada ocurrió DESPUÉS del calentamiento, omitirla
-            let stopTime = '-';
-            if (cycle.stop && cycle.heat) {
-                const stopStart = new Date(cycle.stop.inicio);
-                const heatStart = new Date(cycle.heat.inicio);
-                // Solo mostrar si parada <= calentamiento
-                if (stopStart <= heatStart) {
-                    stopTime = `${formatDate(cycle.stop.inicio)} ${formatTime(cycle.stop.inicio)}`;
-                }
-            } else if (cycle.stop && !cycle.heat) {
-                // Si solo hay parada sin calentamiento, mostrarla
-                stopTime = `${formatDate(cycle.stop.inicio)} ${formatTime(cycle.stop.inicio)}`;
+            // Columna 1: Inicio Parada
+            let col1 = '-';
+            if (cycle.stop) {
+                col1 = `${formatDate(cycle.stop.inicio)} ${formatTime(cycle.stop.inicio)}`;
             }
 
-            const heatTime = cycle.heat ? `${formatDate(cycle.heat.inicio)} ${formatTime(cycle.heat.inicio)}` : '-';
-            const heatDuration = cycle.heat ? cycle.heat.duracion : '-';
-            const prodTime = cycle.prod ? `${formatDate(cycle.prod.inicio)} ${formatTime(cycle.prod.inicio)}` : '<span class="status-badge status-stopped">En curso</span>';
+            // Columna 2: Inicio Calentamiento (si activo) o Inicio Producción (si completado)
+            let col2 = '-';
+            // Columna 3: Tiempo Calentamiento (si activo) o Tiempo Total Parada (si completado)
+            let col3 = '-';
+
+            if (cycle.prod) {
+                // CICLO COMPLETADO (Producción iniciada)
+                col2 = `${formatDate(cycle.prod.inicio)} ${formatTime(cycle.prod.inicio)}`;
+
+                // Calcular tiempo total parada (desde inicio parada hasta inicio producción)
+                if (cycle.stop) {
+                    const diffMs = new Date(cycle.prod.inicio) - new Date(cycle.stop.inicio);
+                    const diffMins = Math.floor(diffMs / 60000);
+                    const hours = Math.floor(diffMins / 60);
+                    const mins = diffMins % 60;
+                    col3 = `${hours}h ${mins}m`;
+                } else if (cycle.heat) {
+                    // Si no hubo parada pero sí calentamiento (raro pero posible)
+                    const diffMs = new Date(cycle.prod.inicio) - new Date(cycle.heat.inicio);
+                    const diffMins = Math.floor(diffMs / 60000);
+                    const hours = Math.floor(diffMins / 60);
+                    const mins = diffMins % 60;
+                    col3 = `${hours}h ${mins}m`;
+                }
+            } else {
+                // CICLO ACTIVO (En Parada o Calentamiento)
+                if (cycle.heat) {
+                    col2 = `${formatDate(cycle.heat.inicio)} ${formatTime(cycle.heat.inicio)}`;
+
+                    // Calcular duración dinámica si es el ciclo más reciente (index 0)
+                    if (index === 0) {
+                        const startTime = new Date(cycle.heat.inicio);
+
+                        // Función para calcular y mostrar duración
+                        const updateDuration = () => {
+                            const now = new Date();
+                            const diffMs = now - startTime;
+                            const diffMins = Math.floor(diffMs / 60000);
+                            const hours = Math.floor(diffMins / 60);
+                            const mins = diffMins % 60;
+                            const durationStr = `${hours}h ${mins}m`;
+
+                            const cell = document.getElementById('active-heat-duration');
+                            if (cell) cell.textContent = durationStr;
+                        };
+
+                        // Valor inicial
+                        const now = new Date();
+                        const diffMs = now - startTime;
+                        const diffMins = Math.floor(diffMs / 60000);
+                        const hours = Math.floor(diffMins / 60);
+                        const mins = diffMins % 60;
+                        col3 = `<span id="active-heat-duration">${hours}h ${mins}m</span>`;
+
+                        // Iniciar intervalo de actualización (cada 10 segundos para mayor respuesta)
+                        updateInterval = setInterval(updateDuration, 10000);
+                    } else {
+                        // Si no es el ciclo actual, mostrar duración estática
+                        col3 = cycle.heat.duracion || '-';
+                    }
+                }
+            }
 
             row.innerHTML = `
-                <td>${stopTime}</td>
-                <td>${heatTime}</td>
-                <td>${heatDuration}</td>
-                <td>${prodTime}</td>
+                <td>${col1}</td>
+                <td>${col2}</td>
+                <td>${col3}</td>
             `;
 
             elements.historyTable.appendChild(row);
         });
     }
 
-    /**
-     * Actualiza estado de conexión
-     */
     function updateConnectionStatus(connected) {
         if (connected) {
             elements.statusDot.classList.remove('disconnected');
