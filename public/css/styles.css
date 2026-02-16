@@ -113,7 +113,9 @@ body {
 .title {
     font-size: clamp(1.5rem, 2vw, 2.2rem);
     font-weight: 800;
-    color: var(--ft);
+    /* color: var(--ft); */
+    color: #ffd700;
+    /* Gold/Yellow for high visibility */
     margin-bottom: 2px;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -121,9 +123,13 @@ body {
 }
 
 .subtitle {
-    font-size: clamp(0.9rem, 1vw, 1.2rem);
-    font-weight: 500;
-    color: var(--muted);
+    /* font-size: clamp(0.9rem, 1vw, 1.2rem); */
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    /* Significantly larger */
+    font-weight: 700;
+    /* Bold */
+    color: #ffffff;
+    /* White for best contrast */
     letter-spacing: 1px;
 }
 
