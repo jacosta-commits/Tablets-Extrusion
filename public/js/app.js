@@ -54,17 +54,28 @@
 
     /**
      * Inicia actualización automática de datos
+     * Usa setTimeout recursivo para evitar acumulación de peticiones
      */
     function startAutoRefresh() {
-        // Actualizar cada 5 segundos
-        autoRefreshInterval = setInterval(async () => {
-            try {
-                await window.UI.loadData();
-            } catch (error) {
-                console.error('Error en auto-refresh:', error);
+        const scheduleNext = () => {
+            if (autoRefreshInterval) {
+                clearTimeout(autoRefreshInterval);
             }
-        }, 5000); // 5 segundos
+            autoRefreshInterval = setTimeout(async () => {
+                try {
+                    await window.UI.loadData();
+                } catch (error) {
+                    console.error('Error en auto-refresh:', error);
+                } finally {
+                    // Programar siguiente ejecución solo cuando termine la actual
+                    if (autoRefreshInterval !== null) {
+                        scheduleNext();
+                    }
+                }
+            }, 5000); // 5 segundos
+        };
 
+        scheduleNext();
         console.log('✓ Auto-refresh iniciado (cada 5s)');
     }
 
@@ -73,7 +84,7 @@
      */
     function stopAutoRefresh() {
         if (autoRefreshInterval) {
-            clearInterval(autoRefreshInterval);
+            clearTimeout(autoRefreshInterval);
             autoRefreshInterval = null;
             console.log('✗ Auto-refresh detenido');
         }

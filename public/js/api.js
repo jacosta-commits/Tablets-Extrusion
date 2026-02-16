@@ -18,10 +18,19 @@ const API = (function () {
             }
         };
 
-        const config = { ...defaultOptions, ...options };
+        // Add timeout support
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+        const config = {
+            ...defaultOptions,
+            ...options,
+            signal: controller.signal
+        };
 
         try {
             const response = await fetch(url, config);
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -34,7 +43,12 @@ const API = (function () {
 
             return await response.text();
         } catch (error) {
-            console.error(`API Error [${endpoint}]:`, error);
+            clearTimeout(timeoutId);
+            if (error.name === 'AbortError') {
+                console.error(`API Timeout [${endpoint}]`);
+            } else {
+                console.error(`API Error [${endpoint}]:`, error);
+            }
             throw error;
         }
     }
